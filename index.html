@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#0096B4">
-  <title>Dubai Parents Community – School Closure Support</title>
+  <title>🇦🇪 Early Years Parents UAE Network (2022/2023)</title>
 
   <!-- intl-tel-input -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.min.css">
@@ -28,6 +28,7 @@
     Co-watch              → Select         (values: Yes / No)
     Online Activities     → Select         (values: Yes / No)
     Community Background  → Rich text
+    Anything Else         → Rich text
     Submitted At          → Date
 
   For Select properties, you don't need to pre-populate options —
@@ -120,7 +121,7 @@
 
     /* ── SECTION TITLE ── */
     .section-title {
-      font-size: 0.72rem;
+      font-size: 0.88rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -141,10 +142,22 @@
       line-height: 1.4;
     }
     .subtext {
-      font-size: 0.81rem;
-      color: var(--text-muted);
-      line-height: 1.55;
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      line-height: 1.65;
       margin-bottom: 10px;
+    }
+
+    /* ── MANDATORY NOTE ── */
+    .mandatory-note {
+      font-size: 0.82rem;
+      color: var(--text-mid);
+      margin-bottom: 14px;
+      margin-top: -6px;
+    }
+    .mandatory-note span {
+      color: var(--error);
+      font-weight: 700;
     }
 
     /* ── INPUTS ── */
@@ -186,7 +199,6 @@
     .iti { width: 100%; }
     .iti__flag-container { left: 0; }
     .iti input[type="tel"] {
-      padding-left: 52px !important;
       width: 100%;
       padding-top: 13px;
       padding-bottom: 13px;
@@ -208,7 +220,7 @@
     .iti--separate-dial-code .iti__selected-flag {
       background: transparent;
       border-right: 1px solid var(--border);
-      padding: 0 9px;
+      padding: 0 10px;
     }
 
     /* ── CHILDREN SECTION ── */
@@ -468,8 +480,8 @@
 
 <!-- ════════════════════════════ HEADER ════════════════════════════ -->
 <div class="page-header">
-  <h1>Dubai Parents Community</h1>
-  <p class="sub">School Closure Support &mdash; Community Interest Form</p>
+  <h1>🇦🇪 Early Years Parents UAE Network</h1>
+  <p class="sub">2022/2023 - School Closure Support - Community Interest Form</p>
 </div>
 
 <!-- ════════════════════════════ FORM SECTION ════════════════════════════ -->
@@ -479,8 +491,10 @@
     <!-- Intro -->
     <div class="card intro-card">
       <p>Schools are closed and young children don't do Zoom. This form helps us understand what support our community needs right now, whether mini pods, co-watch arrangements, or activity resources.</p>
-      <p>This is a volunteer initiative run by Luna and Eshanka in their spare time for the benefit of the community, no profit is made. Your data is only used to understand what our community needs. We will never match you with other parents or commit you to anything without asking you first. This form is purely to explore interest &mdash; zero obligation.</p>
+      <p>This is a volunteer initiative run by Luna and Eshanka in their spare time for the benefit of the community, no profit is made. Your data is only used to understand what our community needs. We will never match you with other parents or commit you to anything without asking you first. This form is purely to explore interest - zero obligation.</p>
     </div>
+
+    <p class="mandatory-note"><span>*</span> mandatory field</p>
 
     <form id="communityForm" novalidate>
 
@@ -502,15 +516,16 @@
 
         <!-- WhatsApp -->
         <div class="field-group" id="fg-phone">
-          <label class="field-label" for="phone">WhatsApp number (with country code, e.g. +971&thinsp;50&thinsp;123&thinsp;4567) <span aria-hidden="true">*</span></label>
-          <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+          <label class="field-label" for="phone">WhatsApp number <span aria-hidden="true">*</span></label>
+          <p class="subtext">Select your country code on the left, then enter your number - no spaces needed.</p>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required>
           <p class="err-msg">Please enter a valid WhatsApp number.</p>
         </div>
       </div>
 
       <!-- ── CHILDREN ── -->
       <div class="card">
-        <p class="section-title">Your children</p>
+        <p class="section-title">Your child</p>
         <div class="field-group">
           <label class="field-label">Birth month &amp; year</label>
           <div id="childrenContainer">
@@ -525,20 +540,20 @@
         <p class="section-title">Your location</p>
         <div class="field-group" id="fg-neighbourhood">
           <label class="field-label" for="neighbourhood">Which area of Dubai do you live in? <span aria-hidden="true">*</span></label>
-          <p class="subtext">We ask this to understand where demand is concentrated, so we can facilitate potential connections between nearby families.</p>
-          <select id="neighbourhood" name="neighbourhood" required>
-            <option value="">Select your area&hellip;</option>
-          </select>
+          <p class="subtext">We ask this to understand where demand is concentrated, so we can facilitate potential connections between nearby families. Your data is only used to understand what our community needs - we will never match you with other parents or commit you to anything without asking you first.</p>
+          <input type="text" id="neighbourhood" name="neighbourhood" list="neighbourhood-list"
+                 autocomplete="off" placeholder="Type to search your area&hellip;" required>
+          <datalist id="neighbourhood-list"></datalist>
           <div class="inline-alert" id="otherEmirateAlert" role="alert">
             We&rsquo;re currently focused on Dubai. If there&rsquo;s enough interest, we&rsquo;ll create dedicated support for other Emirates.
           </div>
-          <p class="err-msg">Please select your area.</p>
+          <p class="err-msg">Please select your area from the list.</p>
         </div>
       </div>
 
       <!-- ── INTERESTS ── -->
       <div class="card">
-        <p class="section-title">What interests you?</p>
+        <p class="section-title">Community support</p>
 
         <!-- Mini pods -->
         <div class="field-group" id="fg-miniPods">
@@ -584,8 +599,21 @@
             Do you have any relevant background that could help the community?
             <span style="font-weight:400;color:var(--text-muted)"> (optional)</span>
           </label>
-          <p class="subtext">For example: early years teaching, childcare, nursing, first aid certification, or experience running children&rsquo;s activities. This helps us understand what expertise exists in our community &mdash; please don&rsquo;t list general skills.</p>
+          <p class="subtext">For example: early years teaching, childcare, nursing, first aid certification, or experience running children&rsquo;s activities. This helps us understand what expertise exists in our community - please don&rsquo;t list general skills.</p>
           <textarea id="background" name="background" placeholder="e.g. Qualified nursery teacher, first aid certified&hellip;"></textarea>
+        </div>
+      </div>
+
+      <!-- ── ANYTHING ELSE ── -->
+      <div class="card">
+        <p class="section-title">Anything else?</p>
+        <div class="field-group">
+          <label class="field-label" for="anythingElse">
+            Anything you want to share?
+            <span style="font-weight:400;color:var(--text-muted)"> (optional)</span>
+          </label>
+          <p class="subtext">Anything at all - questions, suggestions, your situation, or just a note to say hi.</p>
+          <textarea id="anythingElse" name="anythingElse" placeholder="Whatever&rsquo;s on your mind&hellip;"></textarea>
         </div>
       </div>
 
@@ -602,7 +630,7 @@
         <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
 
         <div class="submission-error" id="submissionError" role="alert">
-          Something went wrong &mdash; please try again or message the admins directly.
+          Something went wrong - please try again or message the admins directly.
         </div>
       </div>
 
@@ -613,14 +641,14 @@
 <!-- ════════════════════════════ THANK YOU SECTION ════════════════════════════ -->
 <div id="thankYouSection">
   <div class="page-header" style="padding-bottom:52px;">
-    <h1>Dubai Parents Community</h1>
-    <p class="sub">School Closure Support</p>
+    <h1>🇦🇪 Early Years Parents UAE Network</h1>
+    <p class="sub">2022/2023 - School Closure Support</p>
   </div>
   <div class="container">
     <div class="ty-card">
       <div class="ty-icon">🎉</div>
       <h2>Thank you!</h2>
-      <p>We&rsquo;ll be in touch as things develop. In the meantime, help us reach more Dubai parents &mdash; share this form or invite friends to the group.</p>
+      <p>We&rsquo;ll be in touch as things develop. In the meantime, help us reach more Dubai parents - share this form or invite friends to the group.</p>
 
       <button type="button" class="ty-btn ty-btn-wa" id="shareWaBtn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -636,7 +664,7 @@
   </div>
 </div><!-- /thankYouSection -->
 
-<p class="footer">A volunteer initiative by Luna &amp; Eshanka &middot; Dubai, 2025</p>
+<p class="footer">A volunteer initiative by Luna &amp; Eshanka &middot; Dubai, 2026</p>
 
 <!-- ════════════════════════════ SCRIPTS ════════════════════════════ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
@@ -659,6 +687,16 @@
     preferredCountries: ['ae', 'gb', 'us', 'in', 'sa'],
     separateDialCode: true,
     utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js'
+  });
+
+  // Strip spaces as user types
+  phoneEl.addEventListener('input', function () {
+    var pos = this.selectionStart;
+    var before = this.value;
+    this.value = before.replace(/\s/g, '');
+    // Adjust cursor position after removal
+    var removed = before.length - this.value.length;
+    this.setSelectionRange(pos - removed, pos - removed);
   });
 
   /* ── CHILDREN SECTION ───────────────────────────────────────────── */
@@ -746,15 +784,22 @@
     'Other Emirate (Abu Dhabi, Sharjah, etc.)'
   ];
 
-  var nSelect = document.getElementById('neighbourhood');
-  NEIGHBOURHOODS.forEach(function (n) {
+  // Sort alphabetically, keep "Other..." options at the bottom
+  var OTHERS = ['Other Dubai Area', 'Other Emirate (Abu Dhabi, Sharjah, etc.)'];
+  var SORTED_NEIGHBOURHOODS = NEIGHBOURHOODS
+    .filter(function (n) { return OTHERS.indexOf(n) === -1; })
+    .sort(function (a, b) { return a.localeCompare(b); })
+    .concat(OTHERS);
+
+  var nDatalist = document.getElementById('neighbourhood-list');
+  SORTED_NEIGHBOURHOODS.forEach(function (n) {
     var opt = document.createElement('option');
     opt.value = n;
-    opt.textContent = n;
-    nSelect.appendChild(opt);
+    nDatalist.appendChild(opt);
   });
 
-  nSelect.addEventListener('change', function () {
+  var nInput = document.getElementById('neighbourhood');
+  nInput.addEventListener('input', function () {
     var alert = document.getElementById('otherEmirateAlert');
     alert.style.display = this.value === 'Other Emirate (Abu Dhabi, Sharjah, etc.)' ? 'block' : 'none';
   });
@@ -798,10 +843,11 @@
     setError('fg-phone', !phoneOk);
     if (!phoneOk) ok = false;
 
-    // Neighbourhood
+    // Neighbourhood - must be a value from the list
     var nb = document.getElementById('neighbourhood').value;
-    setError('fg-neighbourhood', !nb);
-    if (!nb) ok = false;
+    var nbValid = nb && SORTED_NEIGHBOURHOODS.indexOf(nb) !== -1;
+    setError('fg-neighbourhood', !nbValid);
+    if (!nbValid) ok = false;
 
     // Toggles
     ['miniPods', 'coWatch', 'onlineActivities'].forEach(function (f) {
@@ -839,12 +885,13 @@
 
     var data = {
       firstName:        (document.getElementById('firstName').value || '').trim(),
-      phone:            iti.getNumber ? iti.getNumber() : phoneEl.value.trim(),
+      phone:            iti.getNumber ? iti.getNumber() : phoneEl.value.replace(/\s/g, ''),
       neighbourhood:    document.getElementById('neighbourhood').value,
       miniPods:         document.getElementById('miniPods').value,
       coWatch:          document.getElementById('coWatch').value,
       onlineActivities: document.getElementById('onlineActivities').value,
-      background:       (document.getElementById('background').value || '').trim()
+      background:       (document.getElementById('background').value || '').trim(),
+      anythingElse:     (document.getElementById('anythingElse').value || '').trim()
     };
 
     // Include child data keyed by child index so the worker can read them

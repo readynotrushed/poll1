@@ -80,6 +80,9 @@ function buildNotionPayload(data) {
     'Community Background': {
       rich_text: [{ text: { content: data.background || '' } }],
     },
+    'Anything Else': {
+      rich_text: [{ text: { content: data.anythingElse || '' } }],
+    },
     'Submitted At': {
       date: { start: new Date().toISOString() },
     },
