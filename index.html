@@ -6,9 +6,6 @@
   <meta name="theme-color" content="#0096B4">
   <title>🇦🇪 Early Years Parents UAE Network (2022/2023)</title>
 
-  <!-- intl-tel-input -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.min.css">
-
   <!--
   ═══════════════════════════════════════════════════════════════
   NOTION DATABASE SETUP
@@ -151,17 +148,20 @@
     /* ── MANDATORY NOTE ── */
     .mandatory-note {
       font-size: 0.82rem;
-      color: rgba(255,255,255,0.8);
-      margin-bottom: 14px;
-      margin-top: -6px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      text-align: right;
     }
-    .mandatory-note span {
-      color: var(--orange-warm);
+
+    /* ── REQUIRED STAR ── */
+    .req-star {
+      color: var(--error);
       font-weight: 700;
     }
 
     /* ── INPUTS ── */
     input[type="text"],
+    input[type="tel"],
     select,
     textarea {
       display: block;
@@ -178,6 +178,7 @@
       appearance: none;
     }
     input[type="text"]:focus,
+    input[type="tel"]:focus,
     select:focus,
     textarea:focus {
       outline: none;
@@ -195,26 +196,22 @@
       cursor: pointer;
     }
 
-    /* ── intl-tel-input ── */
-    .iti { width: 100%; }
-    .iti input[type="tel"] {
-      border: 2px solid var(--border);
-      border-radius: var(--radius-md);
-      font-size: 0.97rem;
-      font-family: inherit;
-      color: var(--text-dark);
-      background: #f8fdff;
-      -webkit-appearance: none;
-      appearance: none;
-      transition: border-color 0.18s, background 0.18s;
+    /* ── PHONE ROW ── */
+    .phone-row {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
     }
-    .iti input[type="tel"]:focus {
-      outline: none;
-      border-color: var(--teal-light);
-      background: var(--white);
+    .phone-row select {
+      width: auto;
+      flex: 0 0 auto;
+      min-width: 110px;
+      max-width: 140px;
     }
-    .iti--separate-dial-code .iti__selected-flag {
-      border-right: 1px solid var(--border);
+    .phone-row input[type="tel"] {
+      flex: 1;
+      width: auto;
+      min-width: 0;
     }
 
     /* ── CHILDREN SECTION ── */
@@ -335,9 +332,10 @@
 
     /* ── ERROR STATES ── */
     .field-error input[type="text"],
+    .field-error input[type="tel"],
     .field-error select,
     .field-error textarea,
-    .field-error .iti input[type="tel"] {
+    .child-block.field-error select {
       border-color: var(--error);
       background: var(--error-bg);
     }
@@ -488,8 +486,6 @@
       <p>This is a volunteer initiative run by Luna and Eshanka in their spare time for the benefit of the community, no profit is made. Your data is only used to understand what our community needs. We will never match you with other parents or commit you to anything without asking you first. This form is purely to explore interest - zero obligation.</p>
     </div>
 
-    <p class="mandatory-note"><span>*</span> mandatory field</p>
-
     <form id="communityForm" novalidate>
 
       <!-- Honeypot -->
@@ -500,20 +496,103 @@
       <!-- ── BASIC INFO ── -->
       <div class="card">
         <p class="section-title">About you</p>
+        <p class="mandatory-note"><span class="req-star">*</span> mandatory field</p>
 
         <!-- First name -->
         <div class="field-group" id="fg-firstName">
-          <label class="field-label" for="firstName">First name <span aria-hidden="true">*</span></label>
+          <label class="field-label" for="firstName">First name <span class="req-star" aria-hidden="true">*</span></label>
           <input type="text" id="firstName" name="firstName" autocomplete="given-name" placeholder="Your first name" required>
           <p class="err-msg">Please enter your first name.</p>
         </div>
 
         <!-- WhatsApp -->
         <div class="field-group" id="fg-phone">
-          <label class="field-label" for="phone">WhatsApp number <span aria-hidden="true">*</span></label>
-          <p class="subtext">Select your country code on the left, then enter your number - no spaces needed.</p>
-          <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="501234567" required>
-          <p class="err-msg">Please enter a valid WhatsApp number.</p>
+          <label class="field-label" for="phoneNumber">WhatsApp number <span class="req-star" aria-hidden="true">*</span></label>
+          <p class="subtext">Select your country code on the left, then enter your number.</p>
+          <div class="phone-row">
+            <select id="dialCode" name="dialCode" autocomplete="tel-country-code">
+              <option value="+971">UAE +971</option>
+              <option value="+44">UK +44</option>
+              <option value="+1">US +1</option>
+              <option value="+91">India +91</option>
+              <option value="+966">Saudi Arabia +966</option>
+              <option disabled>──────────</option>
+              <option value="+93">Afghanistan +93</option>
+              <option value="+213">Algeria +213</option>
+              <option value="+54">Argentina +54</option>
+              <option value="+61">Australia +61</option>
+              <option value="+43">Austria +43</option>
+              <option value="+973">Bahrain +973</option>
+              <option value="+880">Bangladesh +880</option>
+              <option value="+32">Belgium +32</option>
+              <option value="+55">Brazil +55</option>
+              <option value="+1">Canada +1</option>
+              <option value="+86">China +86</option>
+              <option value="+57">Colombia +57</option>
+              <option value="+420">Czech Republic +420</option>
+              <option value="+45">Denmark +45</option>
+              <option value="+20">Egypt +20</option>
+              <option value="+251">Ethiopia +251</option>
+              <option value="+358">Finland +358</option>
+              <option value="+33">France +33</option>
+              <option value="+49">Germany +49</option>
+              <option value="+233">Ghana +233</option>
+              <option value="+30">Greece +30</option>
+              <option value="+852">Hong Kong +852</option>
+              <option value="+36">Hungary +36</option>
+              <option value="+62">Indonesia +62</option>
+              <option value="+98">Iran +98</option>
+              <option value="+964">Iraq +964</option>
+              <option value="+353">Ireland +353</option>
+              <option value="+972">Israel +972</option>
+              <option value="+39">Italy +39</option>
+              <option value="+81">Japan +81</option>
+              <option value="+962">Jordan +962</option>
+              <option value="+7">Kazakhstan +7</option>
+              <option value="+254">Kenya +254</option>
+              <option value="+965">Kuwait +965</option>
+              <option value="+961">Lebanon +961</option>
+              <option value="+218">Libya +218</option>
+              <option value="+60">Malaysia +60</option>
+              <option value="+52">Mexico +52</option>
+              <option value="+212">Morocco +212</option>
+              <option value="+31">Netherlands +31</option>
+              <option value="+64">New Zealand +64</option>
+              <option value="+234">Nigeria +234</option>
+              <option value="+47">Norway +47</option>
+              <option value="+968">Oman +968</option>
+              <option value="+92">Pakistan +92</option>
+              <option value="+63">Philippines +63</option>
+              <option value="+48">Poland +48</option>
+              <option value="+351">Portugal +351</option>
+              <option value="+974">Qatar +974</option>
+              <option value="+40">Romania +40</option>
+              <option value="+7">Russia +7</option>
+              <option value="+65">Singapore +65</option>
+              <option value="+27">South Africa +27</option>
+              <option value="+82">South Korea +82</option>
+              <option value="+34">Spain +34</option>
+              <option value="+94">Sri Lanka +94</option>
+              <option value="+249">Sudan +249</option>
+              <option value="+46">Sweden +46</option>
+              <option value="+41">Switzerland +41</option>
+              <option value="+963">Syria +963</option>
+              <option value="+886">Taiwan +886</option>
+              <option value="+255">Tanzania +255</option>
+              <option value="+66">Thailand +66</option>
+              <option value="+216">Tunisia +216</option>
+              <option value="+90">Turkey +90</option>
+              <option value="+256">Uganda +256</option>
+              <option value="+380">Ukraine +380</option>
+              <option value="+84">Vietnam +84</option>
+              <option value="+967">Yemen +967</option>
+              <option value="+260">Zambia +260</option>
+              <option value="+263">Zimbabwe +263</option>
+            </select>
+            <input type="tel" id="phoneNumber" name="phoneNumber"
+                   autocomplete="tel-national" inputmode="tel" placeholder="501234567" required>
+          </div>
+          <p class="err-msg">Please enter your phone number.</p>
         </div>
       </div>
 
@@ -533,7 +612,7 @@
       <div class="card">
         <p class="section-title">Your location</p>
         <div class="field-group" id="fg-neighbourhood">
-          <label class="field-label" for="neighbourhood">Where are you based in the UAE? <span aria-hidden="true">*</span></label>
+          <label class="field-label" for="neighbourhood">Where are you based in the UAE? <span class="req-star" aria-hidden="true">*</span></label>
           <p class="subtext">We ask this to understand where demand is concentrated, so we can facilitate potential connections between nearby families. Your data is only used to understand what our community needs - we will never match you with other parents or commit you to anything without asking you first.</p>
           <select id="neighbourhood" name="neighbourhood" required>
             <option value="">Select your area&hellip;</option>
@@ -562,7 +641,7 @@
 
         <!-- Mini pods -->
         <div class="field-group" id="fg-miniPods">
-          <label class="field-label">Are you interested in neighbourhood learning mini pods? <span aria-hidden="true">*</span></label>
+          <label class="field-label">Are you interested in neighbourhood learning mini pods? <span class="req-star" aria-hidden="true">*</span></label>
           <p class="subtext">Small groups of children meeting in person, possibly facilitated by a teacher, to stay socially connected and engaged during school closures.</p>
           <div class="toggle-group" role="group" aria-label="Mini pods interest">
             <button type="button" class="toggle-btn" data-field="miniPods" data-value="Yes">YES</button>
@@ -574,7 +653,7 @@
 
         <!-- Co-watch -->
         <div class="field-group" id="fg-coWatch">
-          <label class="field-label">Are you interested in co-watch arrangements? <span aria-hidden="true">*</span></label>
+          <label class="field-label">Are you interested in co-watch arrangements? <span class="req-star" aria-hidden="true">*</span></label>
           <p class="subtext">Parents and nannies take turns supervising each other&rsquo;s children in a rotating schedule, giving parents a block of uninterrupted work time. Example: children at soft play with one or more supervising adult while other parents work remotely or get stuff done nearby.</p>
           <div class="toggle-group" role="group" aria-label="Co-watch interest">
             <button type="button" class="toggle-btn" data-field="coWatch" data-value="Yes">YES</button>
@@ -586,7 +665,7 @@
 
         <!-- Online activities -->
         <div class="field-group" id="fg-onlineActivities">
-          <label class="field-label">Are you interested in discount codes for online activities designed for toddlers? <span aria-hidden="true">*</span></label>
+          <label class="field-label">Are you interested in discount codes for online activities designed for toddlers? <span class="req-star" aria-hidden="true">*</span></label>
           <div class="toggle-group" role="group" aria-label="Online activities interest">
             <button type="button" class="toggle-btn" data-field="onlineActivities" data-value="Yes">YES</button>
             <button type="button" class="toggle-btn" data-field="onlineActivities" data-value="No">NO</button>
@@ -672,7 +751,6 @@
 <p class="footer">A volunteer initiative by Luna &amp; Eshanka &middot; Dubai, 2026</p>
 
 <!-- ════════════════════════════ SCRIPTS ════════════════════════════ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 <script>
 (function () {
   'use strict';
@@ -685,21 +763,12 @@
     'July','August','September','October','November','December'
   ];
 
-  /* ── intl-tel-input ──────────────────────────────────────────────── */
-  var phoneEl = document.getElementById('phone');
-  var iti = window.intlTelInput(phoneEl, {
-    initialCountry: 'ae',
-    preferredCountries: ['ae', 'gb', 'us', 'in', 'sa'],
-    separateDialCode: true,
-    utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js'
-  });
-
-  // Strip spaces as user types
-  phoneEl.addEventListener('input', function () {
+  /* ── PHONE FIELD ─────────────────────────────────────────────────── */
+  var phoneNumEl = document.getElementById('phoneNumber');
+  phoneNumEl.addEventListener('input', function () {
     var pos = this.selectionStart;
     var before = this.value;
     this.value = before.replace(/\s/g, '');
-    // Adjust cursor position after removal
     var removed = before.length - this.value.length;
     this.setSelectionRange(pos - removed, pos - removed);
   });
@@ -725,21 +794,25 @@
     if (childCount >= MAX_CHILDREN) return;
     childCount++;
     var n = childCount;
+    var isFirst = n === 1;
     var div = document.createElement('div');
     div.className = 'child-block';
     div.id = 'child-block-' + n;
+    var mLabel = 'Birth month' + (isFirst ? ' <span class="req-star" aria-hidden="true">*</span>' : '');
+    var yLabel = 'Birth year'  + (isFirst ? ' <span class="req-star" aria-hidden="true">*</span>' : '');
+    var errMsg  = isFirst ? '<p class="err-msg">Please select birth month and year for your child.</p>' : '';
     div.innerHTML =
       '<p class="child-title">Child ' + n + '</p>' +
       '<div class="child-row">' +
         '<div>' +
-          '<label for="child' + n + 'Month">Birth month</label>' +
+          '<label for="child' + n + 'Month">' + mLabel + '</label>' +
           '<select id="child' + n + 'Month" name="child' + n + 'Month">' + monthOptions() + '</select>' +
         '</div>' +
         '<div>' +
-          '<label for="child' + n + 'Year">Birth year</label>' +
+          '<label for="child' + n + 'Year">' + yLabel + '</label>' +
           '<select id="child' + n + 'Year" name="child' + n + 'Year">' + yearOptions() + '</select>' +
         '</div>' +
-      '</div>';
+      '</div>' + errMsg;
     document.getElementById('childrenContainer').appendChild(div);
     document.getElementById('addChildBtn').disabled = childCount >= MAX_CHILDREN;
   }
@@ -838,10 +911,21 @@
     setError('fg-firstName', !fn);
     if (!fn) ok = false;
 
-    // Phone — validate after utils script has loaded (graceful fallback)
-    var phoneOk = iti.isValidNumber !== undefined ? iti.isValidNumber() : phoneEl.value.trim().length > 5;
+    // Phone
+    var phoneOk = (document.getElementById('phoneNumber').value || '').replace(/\s/g, '').length >= 5;
     setError('fg-phone', !phoneOk);
     if (!phoneOk) ok = false;
+
+    // Child 1 month and year (required)
+    var c1m = document.getElementById('child1Month');
+    var c1y = document.getElementById('child1Year');
+    var c1ok = (c1m && c1m.value) && (c1y && c1y.value);
+    var child1Block = document.getElementById('child-block-1');
+    if (child1Block) {
+      if (!c1ok) child1Block.classList.add('field-error');
+      else child1Block.classList.remove('field-error');
+    }
+    if (!c1ok) ok = false;
 
     // Neighbourhood
     var nb = document.getElementById('neighbourhood').value;
@@ -884,7 +968,7 @@
 
     var data = {
       firstName:        (document.getElementById('firstName').value || '').trim(),
-      phone:            iti.getNumber ? iti.getNumber() : phoneEl.value.replace(/\s/g, ''),
+      phone:            (document.getElementById('dialCode').value || '') + (document.getElementById('phoneNumber').value || '').replace(/\s/g, ''),
       neighbourhood:    document.getElementById('neighbourhood').value,
       miniPods:         document.getElementById('miniPods').value,
       coWatch:          document.getElementById('coWatch').value,
