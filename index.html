@@ -645,9 +645,7 @@
   'use strict';
 
   /* ── CONFIG ─────────────────────────────────────────────────────── */
-  var NOTION_DB_ID  = '326e185a4dda80a98ebccc436c4bf3b3';
-  var NOTION_KEY    = 'PASTE_YOUR_NOTION_API_KEY_HERE';
-  var CORS_PROXY    = 'https://corsproxy.io/?';
+  var WORKER_URL    = 'PASTE_WORKER_URL_HERE';
   var WA_GROUP_URL  = 'https://chat.whatsapp.com/GVi9AALfLULA394SjLBska?mode=gi_t';
   var MONTHS = [
     'January','February','March','April','May','June',
@@ -820,50 +818,6 @@
     return ok;
   }
 
-  /* ── BUILD NOTION PAYLOAD ───────────────────────────────────────── */
-  function buildPayload(data) {
-    var props = {
-      'Name': {
-        title: [{ text: { content: data.firstName } }]
-      },
-      'WhatsApp': {
-        phone_number: data.phone
-      },
-      'Neighbourhood': {
-        select: { name: data.neighbourhood }
-      },
-      'Mini Pods': {
-        select: { name: data.miniPods }
-      },
-      'Co-watch': {
-        select: { name: data.coWatch }
-      },
-      'Online Activities': {
-        select: { name: data.onlineActivities }
-      },
-      'Community Background': {
-        rich_text: [{ text: { content: data.background || '' } }]
-      },
-      'Submitted At': {
-        date: { start: new Date().toISOString() }
-      }
-    };
-
-    // Child 1–3: separate Month (1–12) and Year (e.g. 2022) Number fields.
-    // Fields for children not added, or with no selection, are sent as null.
-    for (var i = 1; i <= MAX_CHILDREN; i++) {
-      var mEl = document.getElementById('child' + i + 'Month');
-      var yEl = document.getElementById('child' + i + 'Year');
-      props['Child ' + i + ' Month'] = { number: (mEl && mEl.value) ? parseInt(mEl.value, 10) : null };
-      props['Child ' + i + ' Year']  = { number: (yEl && yEl.value) ? parseInt(yEl.value, 10) : null };
-    }
-
-    return {
-      parent: { database_id: NOTION_DB_ID },
-      properties: props
-    };
-  }
-
   /* ── FORM SUBMISSION ────────────────────────────────────────────── */
   document.getElementById('communityForm').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -893,17 +847,18 @@
       background:       (document.getElementById('background').value || '').trim()
     };
 
-    var payload = buildPayload(data);
-    var targetUrl = 'https://api.notion.com/v1/pages';
+    // Include child data keyed by child index so the worker can read them
+    for (var i = 1; i <= MAX_CHILDREN; i++) {
+      var mEl = document.getElementById('child' + i + 'Month');
+      var yEl = document.getElementById('child' + i + 'Year');
+      data['child' + i + 'Month'] = mEl ? mEl.value : '';
+      data['child' + i + 'Year']  = yEl ? yEl.value : '';
+    }
 
-    fetch(CORS_PROXY + encodeURIComponent(targetUrl), {
+    fetch(WORKER_URL, {
       method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + NOTION_KEY,
-        'Content-Type': 'application/json',
-        'Notion-Version': '2022-06-28'
-      },
-      body: JSON.stringify(payload)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     })
     .then(function (res) {
       if (!res.ok) {
