@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0096B4">
+  <title>Dubai Parents Community – School Closure Support</title>
+
+  <!-- intl-tel-input -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.min.css">
+
+  <!--
+  ═══════════════════════════════════════════════════════════════
+  NOTION DATABASE SETUP
+  Database ID: 326e185a4dda80a98ebccc436c4bf3b3 (ReadyNotRushed workspace)
+  Create these properties in your Notion database with exact names/types:
+
+    Name                  → Title          (auto-created)
+    WhatsApp              → Phone number
+    Children              → Rich text
+    Neighbourhood         → Select
+    Mini Pods             → Select
+    Co-watch              → Select
+    Online Activities     → Select
+    Community Background  → Rich text
+    Submitted At          → Date
+
+  For Select properties, you don't need to pre-populate options —
+  Notion will create "Yes" / "No" values on first submission.
+  ═══════════════════════════════════════════════════════════════
+  -->
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal-dark:   #006d85;
+      --teal:        #0096B4;
+      --teal-light:  #00B4D8;
+      --teal-pale:   #e6f8fc;
+      --orange:      #F77F00;
+      --orange-warm: #FCBF49;
+      --orange-pale: #fff5e6;
+      --text-dark:   #1a2e35;
+      --text-mid:    #3d6370;
+      --text-muted:  #7a9aa6;
+      --border:      #cde6ee;
+      --bg:          #f4fcfe;
+      --white:       #ffffff;
+      --error:       #d63031;
+      --error-bg:    #fff0f0;
+      --radius-lg:   14px;
+      --radius-md:   10px;
+      --shadow:      0 2px 18px rgba(0,100,130,0.09);
+    }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal-light) 55%, var(--orange) 100%);
+      padding: 36px 20px 52px;
+      text-align: center;
+      color: var(--white);
+    }
+    .page-header h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .page-header .sub {
+      font-size: 0.88rem;
+      opacity: 0.88;
+      font-weight: 400;
+      letter-spacing: 0.2px;
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 580px;
+      margin: -28px auto 48px;
+      padding: 0 14px;
+      position: relative;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    /* ── INTRO CARD ── */
+    .intro-card {
+      background: linear-gradient(135deg, var(--teal-pale) 0%, var(--orange-pale) 100%);
+      border: 1px solid rgba(0,150,180,0.18);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--text-mid);
+    }
+    .intro-card p + p { margin-top: 14px; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--teal);
+      margin-bottom: 18px;
+    }
+
+    /* ── FIELD GROUP ── */
+    .field-group { margin-bottom: 22px; }
+    .field-group:last-child { margin-bottom: 0; }
+
+    label.field-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.93rem;
+      color: var(--text-dark);
+      margin-bottom: 5px;
+      line-height: 1.4;
+    }
+    .subtext {
+      font-size: 0.81rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    /* ── INPUTS ── */
+    input[type="text"],
+    select,
+    textarea {
+      display: block;
+      width: 100%;
+      padding: 13px 15px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.97rem;
+      font-family: inherit;
+      color: var(--text-dark);
+      background: #f8fdff;
+      transition: border-color 0.18s, background 0.18s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--teal-light);
+      background: var(--white);
+    }
+    textarea { resize: vertical; min-height: 88px; }
+
+    /* Chevron for selects */
+    select {
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'%3E%3Cpath fill='%230096B4' d='M7 9.5l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 13px center;
+      padding-right: 42px;
+      cursor: pointer;
+    }
+
+    /* ── intl-tel-input ── */
+    .iti { width: 100%; }
+    .iti__flag-container { left: 0; }
+    .iti input[type="tel"] {
+      padding-left: 52px !important;
+      width: 100%;
+      padding-top: 13px;
+      padding-bottom: 13px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.97rem;
+      font-family: inherit;
+      color: var(--text-dark);
+      background: #f8fdff;
+      -webkit-appearance: none;
+      appearance: none;
+      transition: border-color 0.18s, background 0.18s;
+    }
+    .iti input[type="tel"]:focus {
+      outline: none;
+      border-color: var(--teal-light);
+      background: var(--white);
+    }
+    .iti--separate-dial-code .iti__selected-flag {
+      background: transparent;
+      border-right: 1px solid var(--border);
+      padding: 0 9px;
+    }
+
+    /* ── CHILDREN SECTION ── */
+    .child-block {
+      background: var(--teal-pale);
+      border: 1px solid rgba(0,150,180,0.2);
+      border-radius: var(--radius-md);
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+    .child-block .child-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--teal);
+      margin-bottom: 11px;
+    }
+    .child-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .child-row label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-mid);
+      margin-bottom: 5px;
+    }
+    .child-row select { font-size: 0.9rem; padding: 10px 36px 10px 12px; }
+
+    .add-child-btn {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px dashed var(--teal-light);
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--teal);
+      font-size: 0.92rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .add-child-btn:hover, .add-child-btn:active { background: var(--teal-pale); }
+    .add-child-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ── TOGGLE BUTTONS ── */
+    .toggle-group {
+      display: flex;
+      gap: 12px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 15px 10px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #f8fdff;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      color: var(--text-muted);
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.18s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .toggle-btn:focus { outline: none; }
+    .toggle-btn.active-yes {
+      border-color: var(--teal);
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal-light));
+      color: var(--white);
+    }
+    .toggle-btn.active-no {
+      border-color: var(--orange);
+      background: linear-gradient(135deg, #c05e00, var(--orange));
+      color: var(--white);
+    }
+
+    /* ── NEIGHBOURHOOD ALERT ── */
+    .inline-alert {
+      display: none;
+      margin-top: 10px;
+      padding: 12px 15px;
+      background: var(--orange-pale);
+      border: 1.5px solid var(--orange);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      color: #7a3d00;
+      line-height: 1.55;
+    }
+
+    /* ── PRIVACY CHECKBOX ── */
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      cursor: pointer;
+    }
+    .checkbox-row input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      margin-top: 1px;
+      accent-color: var(--teal);
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .checkbox-row .checkbox-text {
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: var(--text-mid);
+    }
+
+    /* ── ERROR STATES ── */
+    .field-error input[type="text"],
+    .field-error select,
+    .field-error textarea,
+    .field-error .iti input[type="tel"] {
+      border-color: var(--error);
+      background: var(--error-bg);
+    }
+    .field-error .toggle-group .toggle-btn:not(.active-yes):not(.active-no) {
+      border-color: var(--error);
+    }
+    .field-error .checkbox-row .checkbox-text {
+      color: var(--error);
+    }
+    .err-msg {
+      display: none;
+      margin-top: 5px;
+      font-size: 0.82rem;
+      color: var(--error);
+      font-weight: 500;
+    }
+    .field-error .err-msg { display: block; }
+
+    /* ── SUBMIT BUTTON ── */
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 17px;
+      border: none;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal-light) 50%, var(--orange) 100%);
+      color: var(--white);
+      font-size: 1.08rem;
+      font-weight: 800;
+      font-family: inherit;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.12s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      margin-top: 18px;
+    }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* ── SUBMISSION ERROR ── */
+    .submission-error {
+      display: none;
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: var(--error-bg);
+      border: 1.5px solid var(--error);
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      color: var(--error);
+      line-height: 1.55;
+    }
+
+    /* ── HONEYPOT ── */
+    .hp-trap {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+      tab-index: -1;
+    }
+
+    /* ── THANK YOU SCREEN ── */
+    #thankYouSection { display: none; }
+    .ty-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 36px 24px 28px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      margin-top: -28px;
+    }
+    .ty-icon { font-size: 3rem; margin-bottom: 14px; line-height: 1; }
+    .ty-card h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--teal-dark);
+      margin-bottom: 12px;
+    }
+    .ty-card p {
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-bottom: 26px;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .ty-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: var(--radius-lg);
+      font-size: 0.97rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: opacity 0.2s, transform 0.12s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ty-btn:active { transform: scale(0.98); }
+    .ty-btn-wa {
+      background: linear-gradient(135deg, #128C7E, #25D366);
+      color: var(--white);
+    }
+    .ty-btn-join {
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal-light));
+      color: var(--white);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      padding: 0 20px 32px;
+    }
+
+    @media (min-width: 480px) {
+      .page-header h1 { font-size: 1.75rem; }
+      .card { padding: 26px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════ HEADER ════════════════════════════ -->
+<div class="page-header">
+  <h1>Dubai Parents Community</h1>
+  <p class="sub">School Closure Support &mdash; Community Interest Form</p>
+</div>
+
+<!-- ════════════════════════════ FORM SECTION ════════════════════════════ -->
+<div id="formSection">
+  <div class="container">
+
+    <!-- Intro -->
+    <div class="card intro-card">
+      <p>Schools are closed and young children don't do Zoom. This form helps us understand what support our community needs right now, whether mini pods, co-watch arrangements, or activity resources.</p>
+      <p>This is a volunteer initiative run by Luna and Eshanka in their spare time for the benefit of the community, no profit is made. Your data is only used to understand what our community needs. We will never match you with other parents or commit you to anything without asking you first. This form is purely to explore interest &mdash; zero obligation.</p>
+    </div>
+
+    <form id="communityForm" novalidate>
+
+      <!-- Honeypot -->
+      <div class="hp-trap" aria-hidden="true">
+        <input type="text" name="website" id="hp_website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <!-- ── BASIC INFO ── -->
+      <div class="card">
+        <p class="section-title">About you</p>
+
+        <!-- First name -->
+        <div class="field-group" id="fg-firstName">
+          <label class="field-label" for="firstName">First name <span aria-hidden="true">*</span></label>
+          <input type="text" id="firstName" name="firstName" autocomplete="given-name" placeholder="Your first name" required>
+          <p class="err-msg">Please enter your first name.</p>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="field-group" id="fg-phone">
+          <label class="field-label" for="phone">WhatsApp number (with country code, e.g. +971&thinsp;50&thinsp;123&thinsp;4567) <span aria-hidden="true">*</span></label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+          <p class="err-msg">Please enter a valid WhatsApp number.</p>
+        </div>
+      </div>
+
+      <!-- ── CHILDREN ── -->
+      <div class="card">
+        <p class="section-title">Your children</p>
+        <div class="field-group">
+          <label class="field-label">Birth month &amp; year</label>
+          <div id="childrenContainer">
+            <!-- Child 1 injected by JS -->
+          </div>
+          <button type="button" id="addChildBtn" class="add-child-btn">+ Add another child</button>
+        </div>
+      </div>
+
+      <!-- ── NEIGHBOURHOOD ── -->
+      <div class="card">
+        <p class="section-title">Your location</p>
+        <div class="field-group" id="fg-neighbourhood">
+          <label class="field-label" for="neighbourhood">Which area of Dubai do you live in? <span aria-hidden="true">*</span></label>
+          <p class="subtext">We ask this to understand where demand is concentrated, so we can facilitate potential connections between nearby families.</p>
+          <select id="neighbourhood" name="neighbourhood" required>
+            <option value="">Select your area&hellip;</option>
+          </select>
+          <div class="inline-alert" id="otherEmirateAlert" role="alert">
+            We&rsquo;re currently focused on Dubai. If there&rsquo;s enough interest, we&rsquo;ll create dedicated support for other Emirates.
+          </div>
+          <p class="err-msg">Please select your area.</p>
+        </div>
+      </div>
+
+      <!-- ── INTERESTS ── -->
+      <div class="card">
+        <p class="section-title">What interests you?</p>
+
+        <!-- Mini pods -->
+        <div class="field-group" id="fg-miniPods">
+          <label class="field-label">Are you interested in neighbourhood learning mini pods? <span aria-hidden="true">*</span></label>
+          <p class="subtext">Small groups of children meeting in person, possibly facilitated by a teacher, to stay socially connected and engaged during school closures.</p>
+          <div class="toggle-group" role="group" aria-label="Mini pods interest">
+            <button type="button" class="toggle-btn" data-field="miniPods" data-value="Yes">YES</button>
+            <button type="button" class="toggle-btn" data-field="miniPods" data-value="No">NO</button>
+          </div>
+          <input type="hidden" id="miniPods" name="miniPods" value="">
+          <p class="err-msg">Please select YES or NO.</p>
+        </div>
+
+        <!-- Co-watch -->
+        <div class="field-group" id="fg-coWatch">
+          <label class="field-label">Are you interested in co-watch arrangements? <span aria-hidden="true">*</span></label>
+          <p class="subtext">Parents and nannies take turns supervising each other&rsquo;s children in a rotating schedule, giving parents a block of uninterrupted work time. Example: children at soft play with one or more supervising adult while other parents work remotely or get stuff done nearby.</p>
+          <div class="toggle-group" role="group" aria-label="Co-watch interest">
+            <button type="button" class="toggle-btn" data-field="coWatch" data-value="Yes">YES</button>
+            <button type="button" class="toggle-btn" data-field="coWatch" data-value="No">NO</button>
+          </div>
+          <input type="hidden" id="coWatch" name="coWatch" value="">
+          <p class="err-msg">Please select YES or NO.</p>
+        </div>
+
+        <!-- Online activities -->
+        <div class="field-group" id="fg-onlineActivities">
+          <label class="field-label">Are you interested in discount codes for online activities designed for toddlers? <span aria-hidden="true">*</span></label>
+          <div class="toggle-group" role="group" aria-label="Online activities interest">
+            <button type="button" class="toggle-btn" data-field="onlineActivities" data-value="Yes">YES</button>
+            <button type="button" class="toggle-btn" data-field="onlineActivities" data-value="No">NO</button>
+          </div>
+          <input type="hidden" id="onlineActivities" name="onlineActivities" value="">
+          <p class="err-msg">Please select YES or NO.</p>
+        </div>
+      </div>
+
+      <!-- ── COMMUNITY BACKGROUND ── -->
+      <div class="card">
+        <p class="section-title">Community skills</p>
+        <div class="field-group">
+          <label class="field-label" for="background">
+            Do you have any relevant background that could help the community?
+            <span style="font-weight:400;color:var(--text-muted)"> (optional)</span>
+          </label>
+          <p class="subtext">For example: early years teaching, childcare, nursing, first aid certification, or experience running children&rsquo;s activities. This helps us understand what expertise exists in our community &mdash; please don&rsquo;t list general skills.</p>
+          <textarea id="background" name="background" placeholder="e.g. Qualified nursery teacher, first aid certified&hellip;"></textarea>
+        </div>
+      </div>
+
+      <!-- ── PRIVACY + SUBMIT ── -->
+      <div class="card">
+        <div class="field-group" id="fg-privacy">
+          <label class="checkbox-row">
+            <input type="checkbox" id="privacy" name="privacy" required>
+            <span class="checkbox-text">I understand that my data will only be used by Luna and Eshanka to understand community needs. I can request deletion of my data at any time by messaging Luna directly in the WhatsApp group.</span>
+          </label>
+          <p class="err-msg">Please accept to continue.</p>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+
+        <div class="submission-error" id="submissionError" role="alert">
+          Something went wrong &mdash; please try again or message the admins directly.
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div><!-- /formSection -->
+
+<!-- ════════════════════════════ THANK YOU SECTION ════════════════════════════ -->
+<div id="thankYouSection">
+  <div class="page-header" style="padding-bottom:52px;">
+    <h1>Dubai Parents Community</h1>
+    <p class="sub">School Closure Support</p>
+  </div>
+  <div class="container">
+    <div class="ty-card">
+      <div class="ty-icon">🎉</div>
+      <h2>Thank you!</h2>
+      <p>We&rsquo;ll be in touch as things develop. In the meantime, help us reach more Dubai parents &mdash; share this form or invite friends to the group.</p>
+
+      <button type="button" class="ty-btn ty-btn-wa" id="shareWaBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Share this form on WhatsApp
+      </button>
+
+      <a href="https://chat.whatsapp.com/GVi9AALfLULA394SjLBska?mode=gi_t"
+         target="_blank" rel="noopener noreferrer" class="ty-btn ty-btn-join">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Join the WhatsApp group
+      </a>
+    </div>
+  </div>
+</div><!-- /thankYouSection -->
+
+<p class="footer">A volunteer initiative by Luna &amp; Eshanka &middot; Dubai, 2025</p>
+
+<!-- ════════════════════════════ SCRIPTS ════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ── CONFIG ─────────────────────────────────────────────────────── */
+  var NOTION_DB_ID  = '326e185a4dda80a98ebccc436c4bf3b3';
+  var NOTION_KEY    = 'PASTE_YOUR_NOTION_API_KEY_HERE';
+  var CORS_PROXY    = 'https://corsproxy.io/?';
+  var WA_GROUP_URL  = 'https://chat.whatsapp.com/GVi9AALfLULA394SjLBska?mode=gi_t';
+  var MONTHS = [
+    'January','February','March','April','May','June',
+    'July','August','September','October','November','December'
+  ];
+
+  /* ── intl-tel-input ──────────────────────────────────────────────── */
+  var phoneEl = document.getElementById('phone');
+  var iti = window.intlTelInput(phoneEl, {
+    initialCountry: 'ae',
+    preferredCountries: ['ae', 'gb', 'us', 'in', 'sa'],
+    separateDialCode: true,
+    utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js'
+  });
+
+  /* ── CHILDREN SECTION ───────────────────────────────────────────── */
+  var childCount = 0;
+  var MAX_CHILDREN = 3;
+
+  function monthOptions() {
+    var html = '<option value="">Month</option>';
+    MONTHS.forEach(function (m, i) {
+      var val = (i + 1 < 10 ? '0' : '') + (i + 1);
+      html += '<option value="' + val + '">' + m + '</option>';
+    });
+    return html;
+  }
+
+  function yearOptions() {
+    return '<option value="">Year</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option>';
+  }
+
+  function addChildBlock() {
+    if (childCount >= MAX_CHILDREN) return;
+    childCount++;
+    var n = childCount;
+    var div = document.createElement('div');
+    div.className = 'child-block';
+    div.id = 'child-block-' + n;
+    div.innerHTML =
+      '<p class="child-title">Child ' + n + '</p>' +
+      '<div class="child-row">' +
+        '<div>' +
+          '<label for="child' + n + 'Month">Birth month</label>' +
+          '<select id="child' + n + 'Month" name="child' + n + 'Month">' + monthOptions() + '</select>' +
+        '</div>' +
+        '<div>' +
+          '<label for="child' + n + 'Year">Birth year</label>' +
+          '<select id="child' + n + 'Year" name="child' + n + 'Year">' + yearOptions() + '</select>' +
+        '</div>' +
+      '</div>';
+    document.getElementById('childrenContainer').appendChild(div);
+    document.getElementById('addChildBtn').disabled = childCount >= MAX_CHILDREN;
+  }
+
+  // Render first child on load
+  addChildBlock();
+
+  document.getElementById('addChildBtn').addEventListener('click', addChildBlock);
+
+  /* ── NEIGHBOURHOOD DROPDOWN ─────────────────────────────────────── */
+  var NEIGHBOURHOODS = [
+    // Central / Heritage
+    'Bur Dubai', 'Deira', 'Karama', 'Al Mankhool', 'Al Satwa', 'Oud Metha', 'Zabeel', 'Al Jaddaf', 'Al Kifaf',
+    // Jumeirah / Beachside
+    'Jumeirah 1', 'Jumeirah 2', 'Jumeirah 3', 'Umm Suqeim 1', 'Umm Suqeim 2', 'Umm Suqeim 3', 'Al Wasl', 'Al Safa 1', 'Al Safa 2',
+    // Marina / JBR / Palm
+    'Dubai Marina', 'Jumeirah Beach Residence (JBR)', 'Palm Jumeirah', 'Bluewaters Island',
+    // JLT / New Dubai West
+    'Jumeirah Lake Towers (JLT)', 'Jumeirah Village Circle (JVC)', 'Jumeirah Village Triangle (JVT)',
+    'Jumeirah Golf Estates', 'Motor City', 'Sports City', 'The Greens', 'The Views',
+    'The Springs', 'The Meadows', 'The Lakes', 'Discovery Gardens', 'Al Furjan', 'Production City (IMPZ)',
+    // Dubai Hills / Ranches / South Communities
+    'Dubai Hills Estate', 'Arabian Ranches', 'Arabian Ranches 2', 'Arabian Ranches 3',
+    'Mudon', 'Villanova', 'Serena', 'DAMAC Hills', 'DAMAC Hills 2 (Akoya)',
+    'Town Square', 'The Valley', 'Emaar South', 'Dubai South / Expo City',
+    // Downtown / Business / DIFC
+    'Downtown Dubai', 'Business Bay', 'DIFC', 'Sheikh Zayed Road Residences', 'Trade Centre Area',
+    // Al Barsha / Al Quoz
+    'Al Barsha 1', 'Al Barsha 2', 'Al Barsha 3', 'Al Barsha South',
+    'Al Quoz 1', 'Al Quoz 2', 'Al Quoz 3', 'Al Quoz 4',
+    // East Dubai / Mirdif belt
+    'Mirdif', 'Al Mizhar 1', 'Al Mizhar 2', 'Al Warqa 1', 'Al Warqa 2', 'Al Warqa 3', 'Al Warqa 4',
+    'Shorooq', 'Al Khawaneej', 'Al Rashidiya', 'Al Twar', 'Hor Al Anz', 'Al Mamzar', 'Al Muhaisnah',
+    // Deira / Oud Metha / Port
+    'Al Rigga', 'Al Nahda (Dubai)', 'Al Qusais', 'Al Tawar', 'Nad Al Hamar',
+    // Creek / Waterfront
+    'Dubai Creek Harbour', 'Festival City', 'Culture Village', 'Port Saeed',
+    // Meydan / Nad Al Sheba
+    'Meydan', 'Nad Al Sheba',
+    // Tech / Academic / Suburban East
+    'Dubai Silicon Oasis', 'Academic City', 'Dubai Land Residence Complex', 'Living Legends',
+    'International City', 'Liwan', 'Al Warsan',
+    // Other
+    'Other Dubai Area',
+    'Other Emirate (Abu Dhabi, Sharjah, etc.)'
+  ];
+
+  var nSelect = document.getElementById('neighbourhood');
+  NEIGHBOURHOODS.forEach(function (n) {
+    var opt = document.createElement('option');
+    opt.value = n;
+    opt.textContent = n;
+    nSelect.appendChild(opt);
+  });
+
+  nSelect.addEventListener('change', function () {
+    var alert = document.getElementById('otherEmirateAlert');
+    alert.style.display = this.value === 'Other Emirate (Abu Dhabi, Sharjah, etc.)' ? 'block' : 'none';
+  });
+
+  /* ── TOGGLE BUTTONS ─────────────────────────────────────────────── */
+  document.querySelectorAll('.toggle-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var field = this.dataset.field;
+      var value = this.dataset.value;
+      document.getElementById(field).value = value;
+
+      document.querySelectorAll('.toggle-btn[data-field="' + field + '"]').forEach(function (b) {
+        b.classList.remove('active-yes', 'active-no');
+      });
+      this.classList.add(value === 'Yes' ? 'active-yes' : 'active-no');
+
+      // Clear error state on toggle group's parent
+      var fg = document.getElementById('fg-' + field);
+      if (fg) fg.classList.remove('field-error');
+    });
+  });
+
+  /* ── VALIDATION ─────────────────────────────────────────────────── */
+  function setError(id, show) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (show) el.classList.add('field-error');
+    else el.classList.remove('field-error');
+  }
+
+  function validate() {
+    var ok = true;
+
+    // First name
+    var fn = (document.getElementById('firstName').value || '').trim();
+    setError('fg-firstName', !fn);
+    if (!fn) ok = false;
+
+    // Phone — validate after utils script has loaded (graceful fallback)
+    var phoneOk = iti.isValidNumber !== undefined ? iti.isValidNumber() : phoneEl.value.trim().length > 5;
+    setError('fg-phone', !phoneOk);
+    if (!phoneOk) ok = false;
+
+    // Neighbourhood
+    var nb = document.getElementById('neighbourhood').value;
+    setError('fg-neighbourhood', !nb);
+    if (!nb) ok = false;
+
+    // Toggles
+    ['miniPods', 'coWatch', 'onlineActivities'].forEach(function (f) {
+      var v = document.getElementById(f).value;
+      setError('fg-' + f, !v);
+      if (!v) ok = false;
+    });
+
+    // Privacy
+    var privacy = document.getElementById('privacy').checked;
+    setError('fg-privacy', !privacy);
+    if (!privacy) ok = false;
+
+    return ok;
+  }
+
+  /* ── BUILD NOTION PAYLOAD ───────────────────────────────────────── */
+  function buildPayload(data) {
+    // Collect children info
+    var childParts = [];
+    for (var i = 1; i <= MAX_CHILDREN; i++) {
+      var mEl = document.getElementById('child' + i + 'Month');
+      var yEl = document.getElementById('child' + i + 'Year');
+      if (!mEl || !yEl) break;
+      var mVal = mEl.value;
+      var yVal = yEl.value;
+      if (mVal || yVal) {
+        var mName = mVal ? MONTHS[parseInt(mVal, 10) - 1] : '?';
+        childParts.push('Child ' + i + ': ' + mName + ' ' + (yVal || '?'));
+      }
+    }
+    var childrenStr = childParts.length ? childParts.join(' | ') : 'Not specified';
+
+    return {
+      parent: { database_id: NOTION_DB_ID },
+      properties: {
+        'Name': {
+          title: [{ text: { content: data.firstName } }]
+        },
+        'WhatsApp': {
+          phone_number: data.phone
+        },
+        'Children': {
+          rich_text: [{ text: { content: childrenStr } }]
+        },
+        'Neighbourhood': {
+          select: { name: data.neighbourhood }
+        },
+        'Mini Pods': {
+          select: { name: data.miniPods }
+        },
+        'Co-watch': {
+          select: { name: data.coWatch }
+        },
+        'Online Activities': {
+          select: { name: data.onlineActivities }
+        },
+        'Community Background': {
+          rich_text: [{ text: { content: data.background || '' } }]
+        },
+        'Submitted At': {
+          date: { start: new Date().toISOString() }
+        }
+      }
+    };
+  }
+
+  /* ── FORM SUBMISSION ────────────────────────────────────────────── */
+  document.getElementById('communityForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // Honeypot check
+    if ((document.getElementById('hp_website').value || '').length > 0) return;
+
+    if (!validate()) {
+      var firstErr = document.querySelector('.field-error');
+      if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    var submitBtn = document.getElementById('submitBtn');
+    var errDiv    = document.getElementById('submissionError');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting\u2026';
+    errDiv.style.display = 'none';
+
+    var data = {
+      firstName:        (document.getElementById('firstName').value || '').trim(),
+      phone:            iti.getNumber ? iti.getNumber() : phoneEl.value.trim(),
+      neighbourhood:    document.getElementById('neighbourhood').value,
+      miniPods:         document.getElementById('miniPods').value,
+      coWatch:          document.getElementById('coWatch').value,
+      onlineActivities: document.getElementById('onlineActivities').value,
+      background:       (document.getElementById('background').value || '').trim()
+    };
+
+    var payload = buildPayload(data);
+    var targetUrl = 'https://api.notion.com/v1/pages';
+
+    fetch(CORS_PROXY + encodeURIComponent(targetUrl), {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + NOTION_KEY,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(function (res) {
+      if (!res.ok) {
+        return res.text().then(function (t) { throw new Error(t); });
+      }
+      return res.json();
+    })
+    .then(function () {
+      // Success — swap screens
+      document.getElementById('formSection').style.display = 'none';
+      document.getElementById('thankYouSection').style.display = 'block';
+      window.scrollTo(0, 0);
+    })
+    .catch(function (err) {
+      console.error('Submission error:', err);
+      errDiv.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+    });
+  });
+
+  /* ── WHATSAPP SHARE ─────────────────────────────────────────────── */
+  document.getElementById('shareWaBtn').addEventListener('click', function () {
+    var formUrl = window.location.href.split('?')[0].split('#')[0];
+    var msg = encodeURIComponent(
+      'I just filled in this form for Dubai parents navigating school closures. ' +
+      "It's run by a volunteer community of 2021, 2022 and 2023 parents. " +
+      'Check out the form here: ' + formUrl +
+      '  and join the WhatsApp group: ' + WA_GROUP_URL
+    );
+    window.open('https://wa.me/?text=' + msg, '_blank');
+  });
+
+})();
+</script>
+
+</body>
+</html>
