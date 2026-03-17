@@ -23,7 +23,7 @@
     Child 2 Year          → Number
     Child 3 Month         → Number
     Child 3 Year          → Number
-    Neighbourhood         → Rich text
+    Neighbourhood         → Select
     Mini Pods             → Select         (values: Yes / No)
     Co-watch              → Select         (values: Yes / No)
     Online Activities     → Select         (values: Yes / No)
@@ -828,7 +828,7 @@
         phone_number: data.phone
       },
       'Neighbourhood': {
-        rich_text: [{ text: { content: data.neighbourhood } }]
+        select: { name: data.neighbourhood }
       },
       'Mini Pods': {
         select: { name: data.miniPods }
