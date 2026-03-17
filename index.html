@@ -17,11 +17,16 @@
 
     Name                  → Title          (auto-created)
     WhatsApp              → Phone number
-    Children              → Rich text
-    Neighbourhood         → Select
-    Mini Pods             → Select
-    Co-watch              → Select
-    Online Activities     → Select
+    Child 1 Month         → Number
+    Child 1 Year          → Number
+    Child 2 Month         → Number
+    Child 2 Year          → Number
+    Child 3 Month         → Number
+    Child 3 Year          → Number
+    Neighbourhood         → Rich text
+    Mini Pods             → Select         (values: Yes / No)
+    Co-watch              → Select         (values: Yes / No)
+    Online Activities     → Select         (values: Yes / No)
     Community Background  → Rich text
     Submitted At          → Date
 
@@ -815,52 +820,45 @@
 
   /* ── BUILD NOTION PAYLOAD ───────────────────────────────────────── */
   function buildPayload(data) {
-    // Collect children info
-    var childParts = [];
+    var props = {
+      'Name': {
+        title: [{ text: { content: data.firstName } }]
+      },
+      'WhatsApp': {
+        phone_number: data.phone
+      },
+      'Neighbourhood': {
+        rich_text: [{ text: { content: data.neighbourhood } }]
+      },
+      'Mini Pods': {
+        select: { name: data.miniPods }
+      },
+      'Co-watch': {
+        select: { name: data.coWatch }
+      },
+      'Online Activities': {
+        select: { name: data.onlineActivities }
+      },
+      'Community Background': {
+        rich_text: [{ text: { content: data.background || '' } }]
+      },
+      'Submitted At': {
+        date: { start: new Date().toISOString() }
+      }
+    };
+
+    // Child 1–3: separate Month (1–12) and Year (e.g. 2022) Number fields.
+    // Fields for children not added, or with no selection, are sent as null.
     for (var i = 1; i <= MAX_CHILDREN; i++) {
       var mEl = document.getElementById('child' + i + 'Month');
       var yEl = document.getElementById('child' + i + 'Year');
-      if (!mEl || !yEl) break;
-      var mVal = mEl.value;
-      var yVal = yEl.value;
-      if (mVal || yVal) {
-        var mName = mVal ? MONTHS[parseInt(mVal, 10) - 1] : '?';
-        childParts.push('Child ' + i + ': ' + mName + ' ' + (yVal || '?'));
-      }
+      props['Child ' + i + ' Month'] = { number: (mEl && mEl.value) ? parseInt(mEl.value, 10) : null };
+      props['Child ' + i + ' Year']  = { number: (yEl && yEl.value) ? parseInt(yEl.value, 10) : null };
     }
-    var childrenStr = childParts.length ? childParts.join(' | ') : 'Not specified';
 
     return {
       parent: { database_id: NOTION_DB_ID },
-      properties: {
-        'Name': {
-          title: [{ text: { content: data.firstName } }]
-        },
-        'WhatsApp': {
-          phone_number: data.phone
-        },
-        'Children': {
-          rich_text: [{ text: { content: childrenStr } }]
-        },
-        'Neighbourhood': {
-          select: { name: data.neighbourhood }
-        },
-        'Mini Pods': {
-          select: { name: data.miniPods }
-        },
-        'Co-watch': {
-          select: { name: data.coWatch }
-        },
-        'Online Activities': {
-          select: { name: data.onlineActivities }
-        },
-        'Community Background': {
-          rich_text: [{ text: { content: data.background || '' } }]
-        },
-        'Submitted At': {
-          date: { start: new Date().toISOString() }
-        }
-      }
+      properties: props
     };
   }
 
