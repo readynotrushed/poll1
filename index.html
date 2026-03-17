@@ -51,7 +51,7 @@
       --text-mid:    #3d6370;
       --text-muted:  #7a9aa6;
       --border:      #cde6ee;
-      --bg:          #f4fcfe;
+      --bg:          #006d85;
       --white:       #ffffff;
       --error:       #d63031;
       --error-bg:    #fff0f0;
@@ -151,12 +151,12 @@
     /* ── MANDATORY NOTE ── */
     .mandatory-note {
       font-size: 0.82rem;
-      color: var(--text-mid);
+      color: rgba(255,255,255,0.8);
       margin-bottom: 14px;
       margin-top: -6px;
     }
     .mandatory-note span {
-      color: var(--error);
+      color: var(--orange-warm);
       font-weight: 700;
     }
 
@@ -197,11 +197,7 @@
 
     /* ── intl-tel-input ── */
     .iti { width: 100%; }
-    .iti__flag-container { left: 0; }
     .iti input[type="tel"] {
-      width: 100%;
-      padding-top: 13px;
-      padding-bottom: 13px;
       border: 2px solid var(--border);
       border-radius: var(--radius-md);
       font-size: 0.97rem;
@@ -218,9 +214,7 @@
       background: var(--white);
     }
     .iti--separate-dial-code .iti__selected-flag {
-      background: transparent;
       border-right: 1px solid var(--border);
-      padding: 0 10px;
     }
 
     /* ── CHILDREN SECTION ── */
@@ -466,7 +460,7 @@
     .footer {
       text-align: center;
       font-size: 0.78rem;
-      color: var(--text-muted);
+      color: rgba(255,255,255,0.55);
       padding: 0 20px 32px;
     }
 
@@ -518,7 +512,7 @@
         <div class="field-group" id="fg-phone">
           <label class="field-label" for="phone">WhatsApp number <span aria-hidden="true">*</span></label>
           <p class="subtext">Select your country code on the left, then enter your number - no spaces needed.</p>
-          <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="501234567" required>
           <p class="err-msg">Please enter a valid WhatsApp number.</p>
         </div>
       </div>
@@ -539,15 +533,26 @@
       <div class="card">
         <p class="section-title">Your location</p>
         <div class="field-group" id="fg-neighbourhood">
-          <label class="field-label" for="neighbourhood">Which area of Dubai do you live in? <span aria-hidden="true">*</span></label>
+          <label class="field-label" for="neighbourhood">Where are you based in the UAE? <span aria-hidden="true">*</span></label>
           <p class="subtext">We ask this to understand where demand is concentrated, so we can facilitate potential connections between nearby families. Your data is only used to understand what our community needs - we will never match you with other parents or commit you to anything without asking you first.</p>
-          <input type="text" id="neighbourhood" name="neighbourhood" list="neighbourhood-list"
-                 autocomplete="off" placeholder="Type to search your area&hellip;" required>
-          <datalist id="neighbourhood-list"></datalist>
+          <select id="neighbourhood" name="neighbourhood" required>
+            <option value="">Select your area&hellip;</option>
+            <optgroup label="Other Emirates">
+              <option value="Abu Dhabi">Abu Dhabi</option>
+              <option value="Sharjah">Sharjah</option>
+              <option value="Ajman">Ajman</option>
+              <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+              <option value="Fujairah">Fujairah</option>
+              <option value="Umm Al Quwain">Umm Al Quwain</option>
+            </optgroup>
+            <optgroup id="dubai-group" label="Dubai">
+              <!-- populated by JS in alphabetical order -->
+            </optgroup>
+          </select>
           <div class="inline-alert" id="otherEmirateAlert" role="alert">
             We&rsquo;re currently focused on Dubai. If there&rsquo;s enough interest, we&rsquo;ll create dedicated support for other Emirates.
           </div>
-          <p class="err-msg">Please select your area from the list.</p>
+          <p class="err-msg">Please select your area.</p>
         </div>
       </div>
 
@@ -780,28 +785,23 @@
     'Dubai Silicon Oasis', 'Academic City', 'Dubai Land Residence Complex', 'Falcon City / Wadi Al Safa', 'Living Legends',
     'International City', 'Liwan', 'Al Warsan',
     // Other
-    'Other Dubai Area',
-    'Other Emirate (Abu Dhabi, Sharjah, etc.)'
+    'Other Dubai Area'
   ];
 
-  // Sort alphabetically, keep "Other..." options at the bottom
-  var OTHERS = ['Other Dubai Area', 'Other Emirate (Abu Dhabi, Sharjah, etc.)'];
-  var SORTED_NEIGHBOURHOODS = NEIGHBOURHOODS
-    .filter(function (n) { return OTHERS.indexOf(n) === -1; })
-    .sort(function (a, b) { return a.localeCompare(b); })
-    .concat(OTHERS);
-
-  var nDatalist = document.getElementById('neighbourhood-list');
-  SORTED_NEIGHBOURHOODS.forEach(function (n) {
+  // Populate Dubai optgroup in strict alphabetical order
+  var dubaiGroup = document.getElementById('dubai-group');
+  NEIGHBOURHOODS.slice().sort(function (a, b) { return a.localeCompare(b); }).forEach(function (n) {
     var opt = document.createElement('option');
     opt.value = n;
-    nDatalist.appendChild(opt);
+    opt.textContent = n;
+    dubaiGroup.appendChild(opt);
   });
 
-  var nInput = document.getElementById('neighbourhood');
-  nInput.addEventListener('input', function () {
-    var alert = document.getElementById('otherEmirateAlert');
-    alert.style.display = this.value === 'Other Emirate (Abu Dhabi, Sharjah, etc.)' ? 'block' : 'none';
+  var EMIRATE_OPTIONS = ['Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'Fujairah', 'Umm Al Quwain'];
+  var nSelect = document.getElementById('neighbourhood');
+  nSelect.addEventListener('change', function () {
+    var isEmirate = EMIRATE_OPTIONS.indexOf(this.value) !== -1;
+    document.getElementById('otherEmirateAlert').style.display = isEmirate ? 'block' : 'none';
   });
 
   /* ── TOGGLE BUTTONS ─────────────────────────────────────────────── */
@@ -843,11 +843,10 @@
     setError('fg-phone', !phoneOk);
     if (!phoneOk) ok = false;
 
-    // Neighbourhood - must be a value from the list
+    // Neighbourhood
     var nb = document.getElementById('neighbourhood').value;
-    var nbValid = nb && SORTED_NEIGHBOURHOODS.indexOf(nb) !== -1;
-    setError('fg-neighbourhood', !nbValid);
-    if (!nbValid) ok = false;
+    setError('fg-neighbourhood', !nb);
+    if (!nb) ok = false;
 
     // Toggles
     ['miniPods', 'coWatch', 'onlineActivities'].forEach(function (f) {
