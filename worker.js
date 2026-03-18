@@ -83,6 +83,9 @@ function buildNotionPayload(data) {
     'Anything Else': {
       rich_text: [{ text: { content: data.anythingElse || '' } }],
     },
+    'Local Group Link': {
+      url: data.localWhatsapp || null,
+    },
     'Submitted At': {
       date: { start: new Date().toISOString() },
     },
