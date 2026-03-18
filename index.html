@@ -1080,6 +1080,7 @@
       coWatch:          document.getElementById('coWatch').value,
       onlineActivities: document.getElementById('onlineActivities').value,
       background:       (document.getElementById('background').value || '').trim(),
+      localWhatsapp:    (document.getElementById('localWhatsapp').value || '').trim(),
       anythingElse:     (document.getElementById('anythingElse').value || '').trim()
     };
 
@@ -1121,9 +1122,9 @@
     var formUrl = window.location.href.split('?')[0].split('#')[0];
     var msg = encodeURIComponent(
       'I just filled in this form for Dubai parents navigating school closures. ' +
-      "It's run by a volunteer community of 2021, 2022 and 2023 parents. " +
+      "It's run by a volunteer community of 2022/2024 parents. " +
       'Check out the form here: ' + formUrl +
-      '  and join the WhatsApp group: ' + WA_GROUP_URL
+      '  and join the community on whatsapp: ' + WA_GROUP_URL
     );
     window.open('https://wa.me/?text=' + msg, '_blank');
   });
