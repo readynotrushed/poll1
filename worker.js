@@ -1,32 +1,35 @@
 const NOTION_DB_ID  = '326e185a4dda80a98ebccc436c4bf3b3';
 const NOTION_URL    = 'https://api.notion.com/v1/pages';
-const ALLOWED_ORIGIN = 'https://readynotrushed.github.io';
 
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin':  ALLOWED_ORIGIN,
+  'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
+
+function corsResponse(body, status, extra) {
+  return new Response(body, {
+    status,
+    headers: { ...CORS_HEADERS, ...extra },
+  });
+}
 
 export default {
   async fetch(request, env) {
     // Handle CORS preflight
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
+      return new Response(null, { status: 200, headers: CORS_HEADERS });
     }
 
     if (request.method !== 'POST') {
-      return new Response('Method Not Allowed', { status: 405, headers: CORS_HEADERS });
+      return corsResponse('Method Not Allowed', 405, {});
     }
 
     let data;
     try {
       data = await request.json();
     } catch {
-      return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
-        status: 400,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      });
+      return corsResponse(JSON.stringify({ error: 'Invalid JSON' }), 400, { 'Content-Type': 'application/json' });
     }
 
     const payload = buildNotionPayload(data);
@@ -43,17 +46,15 @@ export default {
         body: JSON.stringify(payload),
       });
     } catch (err) {
-      return new Response(JSON.stringify({ error: 'Failed to reach Notion', detail: err.message }), {
-        status: 502,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-      });
+      return corsResponse(
+        JSON.stringify({ error: 'Failed to reach Notion', detail: err.message }),
+        502,
+        { 'Content-Type': 'application/json' }
+      );
     }
 
     const body = await notionRes.text();
-    return new Response(body, {
-      status: notionRes.status,
-      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-    });
+    return corsResponse(body, notionRes.status, { 'Content-Type': 'application/json' });
   },
 };
 
